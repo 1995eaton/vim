@@ -25,7 +25,7 @@ srcdir		= .
 
 LDFLAGS		=  -L/usr/local/lib -Wl,--as-needed
 LIBS		= -lm -lncurses -lelf -lnsl   -lacl -lattr -lgpm -ldl
-TAGPRG		= ctags
+TAGPRG		= etags
 
 CPP		= gcc -E
 CPP_MM		= M

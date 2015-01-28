@@ -6007,6 +6007,7 @@ list_free(l, recurse)
 
 /*
  * Allocate a list item.
+ * It is not initialized, don't forget to set v_lock.
  */
     listitem_T *
 listitem_alloc()
@@ -10499,6 +10500,7 @@ f_feedkeys(argvars, rettv)
     typval_T    *rettv UNUSED;
 {
     int		remap = TRUE;
+    int		insert = FALSE;
     char_u	*keys, *flags;
     char_u	nbuf[NUMBUFLEN];
     int		typed = FALSE;
@@ -10523,6 +10525,7 @@ f_feedkeys(argvars, rettv)
 		    case 'n': remap = FALSE; break;
 		    case 'm': remap = TRUE; break;
 		    case 't': typed = TRUE; break;
+		    case 'i': insert = TRUE; break;
 		}
 	    }
 	}
@@ -10533,7 +10536,7 @@ f_feedkeys(argvars, rettv)
 	if (keys_esc != NULL)
 	{
 	    ins_typebuf(keys_esc, (remap ? REMAP_YES : REMAP_NONE),
-					       typebuf.tb_len, !typed, FALSE);
+				  insert ? 0 : typebuf.tb_len, !typed, FALSE);
 	    vim_free(keys_esc);
 	    if (vgetc_busy)
 		typebuf_was_filled = TRUE;
@@ -18713,6 +18716,7 @@ get_cmd_output_as_rettv(argvars, rettv, retlist)
 		goto errret;
 	    }
 	    li->li_tv.v_type = VAR_STRING;
+	    li->li_tv.v_lock = 0;
 	    li->li_tv.vval.v_string = s;
 	    list_append(list, li);
 	}
